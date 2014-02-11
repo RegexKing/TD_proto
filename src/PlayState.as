@@ -35,14 +35,31 @@ package
 			enemyBullets = new FlxGroup();
 			
 			map = new Map();
-			
+	
 			creep = new Creep(map);
+			enemyUnits.add(creep);
+			
+			var playerUnit:PlayerUnit = new PlayerUnit(enemyUnits);
+			playerUnit.x = playerUnit.y = 0;
+			
+			var playerUnit2:PlayerUnit = new PlayerUnit(enemyUnits);
+			playerUnit2.x = playerUnit2.y = 200;
+			
+			playerUnits.add(playerUnit);
+			playerUnits.add(playerUnit2);
+			
+			var cursor:Cursor = new Cursor(playerUnits);
 			
 			createBackgroundObjects();
 			
 			add(bg);
 			add(map);
-			add(creep);
+			add(cursor.highlight);
+			add(enemyUnits);
+			add(playerUnits);
+			add(playerBullets);
+			add(enemyBullets);
+			add(cursor);
 		}
 		
 		override public function update():void
