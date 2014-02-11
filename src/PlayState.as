@@ -7,7 +7,7 @@ package
 	 
 	public class PlayState extends FlxState
 	{
-		private const TOTAL_ENEMIES:uint = 8;
+		private const TOTAL_ENEMIES:uint = 6;
 		
 		private var playerUnits:FlxGroup;
 		private var enemyUnits:FlxGroup;
@@ -18,6 +18,10 @@ package
 		private var enemyQueue:EnemyQueue;
 		private var starField:StarfieldFX;
 		private var bg:FlxSprite;
+		
+		private var base:FlxSprite;
+		private var gameOver:Boolean = false;
+		private var header:FlxText;
 		
 		public function PlayState() 
 		{ 
@@ -42,28 +46,32 @@ package
 	
 			createEnemies();
 			
-			var playerUnit:PlayerUnit = new PlayerUnit(enemyUnits, playerBullets);
-			playerUnit.x = playerUnit.y = 0;
-			
-			var playerUnit2:PlayerUnit = new PlayerUnit(enemyUnits, playerBullets);
-			playerUnit2.x = playerUnit2.y = 200;
-			
-			playerUnits.add(playerUnit);
-			playerUnits.add(playerUnit2);
-			
 			var cursor:Cursor = new Cursor(playerUnits);
 			
 			createBackgroundObjects();
 			
+			base = new FlxSprite(0, 276);
+			base.loadGraphic(AssetsRegistry.basePNG);
+			base.health = 3;
+			var baseHealth:FlxBar = new FlxBar(base.x, base.y, FlxBar.FILL_LEFT_TO_RIGHT, 46, 2, base, "health", 0, base.health);
+			baseHealth.y -= baseHealth.height * 2;
+			
+			header = new FlxText(0, 0, 300, "");
+			header.setFormat(null, 32);
+			header.visible = false;
+			
 			add(bg);
 			add(map);
 			add(cursor.highlight);
+			add(base);
 			add(enemyUnits);
 			add(healthBars);
+			add(baseHealth);
 			add(playerUnits);
 			add(playerBullets);
 			add(enemyBullets);
 			add(cursor);
+			add(header);
 		}
 		
 		private function createEnemies():void
@@ -74,20 +82,59 @@ package
 				enemyUnits.add(creep);
 				enemyQueue.write(creep);
 			}
+			
+			var boss:Creep = new Creep(map, healthBars, true);
+			enemyUnits.add(boss);
+			enemyQueue.write(boss);
 		}
 		
 		override public function update():void
 		{
-			super.update();
+			if (!gameOver) super.update();
 			
-			FlxG.collide(playerUnits, playerUnits);
+			if (FlxG.keys.justPressed("R")) FlxG.switchState(new PlayState());
+			
+			if (FlxG.keys.justPressed("SPACE"))
+			{
+				var playerUnit:PlayerUnit = new PlayerUnit(enemyUnits, playerBullets);
+				playerUnit.x = playerUnit.y = 0;
+			
+				playerUnits.add(playerUnit);
+			}
+			
+			//FlxG.collide(playerUnits, playerUnits);
 			FlxG.overlap(playerBullets, enemyUnits, hurtUnit);
+			FlxG.overlap(enemyUnits, base, hurtUnit);
 		}
 		
-		private function hurtUnit(bullet:FlxObject, unit:FlxObject):void
+		private function hurtUnit(hazzard:FlxObject, unit:FlxObject):void
 		{
 			unit.hurt(1);
-			bullet.kill();
+			hazzard.kill();
+			
+			if (hazzard is Creep && unit.health <= 0)
+			{
+				header.text = ("Game Over");
+				header.visible = true;
+				gameOver = true;
+			}
+			
+			else if ((unit is Creep && unit.health <= 0) || (hazzard is Creep && hazzard.health <= 0))
+			{
+				var allDead:Boolean = true;
+				
+				for each (var enemy:FlxSprite in enemyUnits.members)
+				{
+					if (enemy.alive) allDead = false;
+				}
+				
+				if (allDead)
+				{
+					header.text = ("You Win!");
+					header.visible = true;
+					gameOver = true;
+				}
+			}
 		}
 		
 		override public function destroy():void

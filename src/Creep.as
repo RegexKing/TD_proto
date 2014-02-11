@@ -10,25 +10,51 @@ package
 	{
 		private var healthBar:FlxBar;
 		private var enemyPath:FlxPath;
+		private var speed:int = 0;
 		
-		public function Creep(_map:Map, _healthBars:FlxGroup) 
+		
+		public function Creep(_map:Map, _healthBars:FlxGroup, _isBoss:Boolean=false) 
 		{	
 			this.x = 644;
 			this.y = 184;
 			
-			this.health = 3;
+			var randSkin:int = Math.ceil(Math.random() * 3);
+			
+			if (_isBoss)
+			{
+				loadGraphic(AssetsRegistry.bossPNG);
+				this.health = 10;
+				speed = 50;
+			}
+			else if (randSkin == 1)
+			{
+				loadGraphic(AssetsRegistry.creep1PNG, false, false, 46, 46);
+				this.health = 5;
+				speed = 50;
+			}
+			else if (randSkin == 2) 
+			{
+				loadGraphic(AssetsRegistry.creep2PNG, false, false, 46, 46);
+				this.health = 3;
+				speed = 60;
+				
+			}
+			else if (randSkin == 3) 
+			{
+				loadGraphic(AssetsRegistry.creep3PNG, false, false, 46, 46);
+				this.health = 7;
+				speed = 30;
+			}
 			
 			healthBar = new FlxBar(0, 0, FlxBar.FILL_LEFT_TO_RIGHT, 46, 2, this, "health", 0, this.health, false);
 			_healthBars.add(healthBar);
-			
-			loadGraphic(AssetsRegistry.creep1PNG, false, false, 46, 46);
 			
 			enemyPath = _map.findPath(this.getMidpoint(), _map.endPoint);
 		}
 		
 		public function startPath():void
 		{
-			this.followPath(enemyPath, 50);
+			this.followPath(enemyPath, speed);
 		}
 		
 		override public function update():void

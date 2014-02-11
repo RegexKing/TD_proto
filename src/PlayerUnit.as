@@ -12,7 +12,7 @@ package
 	 */
 	public class PlayerUnit extends FlxSprite
 	{
-		private const FIRE_RANGE:int = 300;
+		private const FIRE_RANGE:int = 250;
 		
 		private var enemyGroup:FlxGroup;
 		private var target:FlxSprite;
