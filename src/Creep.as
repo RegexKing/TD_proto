@@ -9,11 +9,12 @@ package
 	public class Creep extends FlxSprite
 	{
 		private var healthBar:FlxBar;
+		private var gibs:FlxEmitter;
 		private var enemyPath:FlxPath;
 		private var speed:int = 0;
 		
 		
-		public function Creep(_map:Map, _healthBars:FlxGroup, _isBoss:Boolean=false) 
+		public function Creep(_map:Map, _healthBars:FlxGroup, _enemyGibs:FlxGroup, _isBoss:Boolean=false) 
 		{	
 			this.x = 644;
 			this.y = 184;
@@ -49,9 +50,15 @@ package
 			healthBar = new FlxBar(0, 0, FlxBar.FILL_LEFT_TO_RIGHT, 46, 2, this, "health", 0, this.health, false);
 			_healthBars.add(healthBar);
 			
+			gibs = new FlxEmitter();
+			gibs.makeParticles(AssetsRegistry.enemyGibsPNG, 50, 16, true);
+			gibs.setXSpeed(-400,400);
+			gibs.setYSpeed( -400, 400);
+			_enemyGibs.add(gibs);
+			
 			enemyPath = _map.findPath(this.getMidpoint(), _map.endPoint);
 		}
-		
+	
 		public function startPath():void
 		{
 			this.followPath(enemyPath, speed);
@@ -75,6 +82,9 @@ package
 			super.kill();
 			
 			healthBar.kill();
+			
+			gibs.at(this);
+			gibs.start(true, 0.5);
 		}
 		
 	}

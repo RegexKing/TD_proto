@@ -14,6 +14,9 @@ package
 		[Embed(source = "../images/creep-3.png")] public static var creep3PNG:Class;
 		[Embed(source = "../images/boss.png")] public static var bossPNG:Class;
 		
+		//gibs
+		[Embed(source = "../images/enemyGibs.png")] public static var enemyGibsPNG:Class;
+		
 		//player units
 		[Embed(source = "../images/player.png")] public static var playerPNG:Class;
 		

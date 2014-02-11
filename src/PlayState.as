@@ -14,6 +14,7 @@ package
 		private var playerBullets:FlxGroup;
 		private var enemyBullets:FlxGroup;
 		private var healthBars:FlxGroup;
+		private var enemyGibs:FlxGroup;
 		private var map:Map
 		private var enemyQueue:EnemyQueue;
 		private var starField:StarfieldFX;
@@ -39,6 +40,7 @@ package
 			playerBullets = new FlxGroup();
 			enemyBullets = new FlxGroup();
 			healthBars = new FlxGroup();
+			enemyGibs = new FlxGroup();
 			
 			enemyQueue = new EnemyQueue();
 			
@@ -62,8 +64,9 @@ package
 			
 			add(bg);
 			add(map);
-			add(cursor.highlight);
+			add(enemyGibs);
 			add(base);
+			add(cursor.highlight);
 			add(enemyUnits);
 			add(healthBars);
 			add(baseHealth);
@@ -78,12 +81,12 @@ package
 		{
 			for (var i:int = 0; i < TOTAL_ENEMIES; i++)
 			{
-				var creep:Creep = new Creep(map, healthBars);
+				var creep:Creep = new Creep(map, healthBars, enemyGibs);
 				enemyUnits.add(creep);
 				enemyQueue.write(creep);
 			}
 			
-			var boss:Creep = new Creep(map, healthBars, true);
+			var boss:Creep = new Creep(map, healthBars, enemyGibs, true);
 			enemyUnits.add(boss);
 			enemyQueue.write(boss);
 		}
