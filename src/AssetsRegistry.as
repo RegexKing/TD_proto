@@ -16,6 +16,9 @@ package
 		//player units
 		[Embed(source = "../images/boss.png")] public static var playerPNG:Class;
 		
+		//bullets
+		[Embed(source = "../images/playerBullet.png")] public static var playerBulletPNG:Class;
+		
 		//tiles
 		[Embed(source = "../images/tileset.png")] public static var tilesetPNG:Class;
 		

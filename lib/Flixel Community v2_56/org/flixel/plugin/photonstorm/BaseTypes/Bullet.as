@@ -39,6 +39,7 @@ package org.flixel.plugin.photonstorm.BaseTypes
 		public var expiresTime:uint;
 		
 		protected var animated:Boolean;
+		private var chosenTarget:FlxSprite;
 		
 		public function Bullet(weapon:FlxWeapon, id:uint)
 		{
@@ -125,8 +126,11 @@ package org.flixel.plugin.photonstorm.BaseTypes
 		
 		public function fireAtTarget(fromX:int, fromY:int, target:FlxSprite, speed:int):void
 		{
+			chosenTarget = target;
+			
 			x = fromX + FlxMath.rand( -weapon.rndFactorPosition.x, weapon.rndFactorPosition.x);
 			y = fromY + FlxMath.rand( -weapon.rndFactorPosition.y, weapon.rndFactorPosition.y);
+			
 			
 			if (accelerates)
 			{
@@ -136,6 +140,7 @@ package org.flixel.plugin.photonstorm.BaseTypes
 			{
 				FlxVelocity.moveTowardsObject(this, target, speed + FlxMath.rand( -weapon.rndFactorSpeed, weapon.rndFactorSpeed));
 			}
+			
 			
 			postFire();
 		}
@@ -225,6 +230,19 @@ package org.flixel.plugin.photonstorm.BaseTypes
 			{
 				kill();
 			}
+			
+			if (chosenTarget && chosenTarget.alive)
+			{
+				angle = HomingUtil.easeTowardsTarget(this, chosenTarget, 5000);
+			}
+			
+		}
+		
+		override public function kill():void
+		{
+			super.kill();
+			
+			chosenTarget = null;
 		}
 		
 	}
