@@ -26,6 +26,12 @@ package
 		//structures
 		[Embed(source = "../images/base.png")] public static var basePNG:Class;
 		
+		//cursor
+		[Embed(source = "../images/moveAnimation.png")] public static var movePNG:Class;
+		
+		//explosion
+		[Embed(source = "../images/baseExplosion.png")] public static var baseExplosionPNG:Class;
+		
 		//tiles
 		[Embed(source = "../images/tileset.png")] public static var tilesetPNG:Class;
 		

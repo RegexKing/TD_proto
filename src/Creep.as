@@ -52,8 +52,8 @@ package
 			
 			gibs = new FlxEmitter();
 			gibs.makeParticles(AssetsRegistry.enemyGibsPNG, 50, 16, true);
-			gibs.setXSpeed(-400,400);
-			gibs.setYSpeed( -400, 400);
+			gibs.setXSpeed(-500,500);
+			gibs.setYSpeed( -500, 500);
 			_enemyGibs.add(gibs);
 			
 			enemyPath = _map.findPath(this.getMidpoint(), _map.endPoint);
@@ -84,7 +84,7 @@ package
 			healthBar.kill();
 			
 			gibs.at(this);
-			gibs.start(true, 0.5);
+			gibs.start(true, 2);
 		}
 		
 	}

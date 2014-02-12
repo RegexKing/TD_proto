@@ -19,6 +19,7 @@ package
 		private var playerUnits:FlxGroup;
 		private var cursorCoords:FlxPoint;
 		public var highlight:FlxSprite;
+		public var moveSprite:FlxSprite;
 		
 		public function Cursor(_playerUnits:FlxGroup) 
 		{
@@ -27,8 +28,13 @@ package
 			
 			highlight = new FlxSprite();
 			highlight.makeGraphic(46, 46, 0xff7CFC00);
-			highlight.alpha = 0.5;
+			highlight.alpha = 0.25;
 			highlight.visible = false;
+			
+			moveSprite = new FlxSprite();
+			moveSprite.loadGraphic(AssetsRegistry.movePNG, true, false, 46, 46);
+			moveSprite.addAnimation("move", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 60, false);
+			moveSprite.visible = false;
 		}
 		
 		override public function update():void
@@ -54,6 +60,11 @@ package
 				if (selectedUnit && !unitFound)
 				{
 					selectedUnit.findPath(cursorCoords.x, cursorCoords.y);
+					
+					moveSprite.visible = true;
+					moveSprite.x = cursorCoords.x - (moveSprite.width/2);
+					moveSprite.y = cursorCoords.y - (moveSprite.height/2);
+					moveSprite.play("move");
 				}
 				
 				

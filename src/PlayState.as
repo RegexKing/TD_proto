@@ -8,6 +8,7 @@ package
 	public class PlayState extends FlxState
 	{
 		private const TOTAL_ENEMIES:uint = 6;
+		private var gameOver:Boolean = false;
 		
 		private var playerUnits:FlxGroup;
 		private var enemyUnits:FlxGroup;
@@ -21,7 +22,7 @@ package
 		private var bg:FlxSprite;
 		
 		private var base:FlxSprite;
-		private var gameOver:Boolean = false;
+		private var baseExplosion:FlxSprite;
 		private var header:FlxText;
 		
 		public function PlayState() 
@@ -58,6 +59,11 @@ package
 			var baseHealth:FlxBar = new FlxBar(base.x, base.y, FlxBar.FILL_LEFT_TO_RIGHT, 46, 2, base, "health", 0, base.health);
 			baseHealth.y -= baseHealth.height * 2;
 			
+			baseExplosion = new FlxSprite(base.x, base.y);
+			baseExplosion.loadGraphic(AssetsRegistry.baseExplosionPNG, true, false, 46, 46);
+			baseExplosion.addAnimation("explode", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 60, false);
+			baseExplosion.visible = false;
+			
 			header = new FlxText(0, 0, 300, "");
 			header.setFormat(null, 32);
 			header.visible = false;
@@ -66,7 +72,9 @@ package
 			add(map);
 			add(enemyGibs);
 			add(base);
+			add(baseExplosion);
 			add(cursor.highlight);
+			add(cursor.moveSprite);
 			add(enemyUnits);
 			add(healthBars);
 			add(baseHealth);
@@ -137,6 +145,12 @@ package
 					header.visible = true;
 					gameOver = true;
 				}
+			}
+			
+			if (!(unit is Creep) && !(unit is PlayerUnit))
+			{
+				baseExplosion.visible = true;
+				baseExplosion.play("explode");
 			}
 		}
 		
