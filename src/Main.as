@@ -18,7 +18,7 @@ package
 		public function Main():void 
 		{
 			
-			super(640, 360, PlayState, 1, 60, 60, true);
+			super(644, 368, PlayState, 1, 60, 60, true);
 			
 			forceDebugger = true;
 		}
